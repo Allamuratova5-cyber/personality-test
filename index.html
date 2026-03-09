@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Big Five Personality Test</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Personality Test</h1>
+
+<p id="progress"></p>
+
+<div class="progress-bar">
+<div id="progress-fill"></div>
+</div>
+
+<div class="quiz">
+
+<p id="question"></p>
+
+<div class="answers">
+
+<button onclick="answer(1)" class="circle red"></button>
+<button onclick="answer(2)" class="circle orange"></button>
+<button onclick="answer(3)" class="circle gray"></button>
+<button onclick="answer(4)" class="circle lightgreen"></button>
+<button onclick="answer(5)" class="circle green"></button>
+
+</div>
+
+</div>
+
+<canvas id="chart" width="400" height="200"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
