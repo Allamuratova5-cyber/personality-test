@@ -3,11 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Career Interest & Barrier Survey</title>
+  <title>My Path</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="card" id="quizCard">
+  <!-- WELCOME SCREEN -->
+  <section id="welcomeScreen" class="welcome-screen">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-icon">❤</div>
+        <div class="brand-text">My Path</div>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#">About</a>
+        <a href="#">Assessment</a>
+        <a href="#">Contact</a>
+      </nav>
+
+      <div class="lang-switch">
+        <button type="button" class="lang active">EN</button>
+        <button type="button" class="lang">RU</button>
+        <button type="button" class="lang">KZ</button>
+      </div>
+    </header>
+
+    <div class="hero">
+      <p class="hero-welcome">Welcome</p>
+      <h1>What shaped your choice of major?</h1>
+      <h2>Your interest — or outside influence?</h2>
+      <p class="hero-subtext">Take a quick test to find out.</p>
+
+      <div class="hero-buttons">
+        <button id="startBtn" class="hero-btn primary-btn" type="button">Start My Path ↓</button>
+        <button id="seeResultsBtn" class="hero-btn secondary-btn" type="button">See Results</button>
+      </div>
+    </div>
+
+    <div class="floating-heart">❤</div>
+  </section>
+
+  <!-- QUIZ SCREEN -->
+  <div class="card" id="quizCard" style="display: none;">
     <div class="top-meta">
       <div id="progressText" class="progress-text">1/75</div>
       <div id="categoryText" class="category-text">Social Influence</div>
@@ -24,6 +61,7 @@
     <div id="options"></div>
   </div>
 
+  <!-- RESULTS SCREEN -->
   <div class="card result-card" id="resultCard" style="display: none;">
     <h2>Your Results</h2>
     <div id="resultsContainer"></div>
