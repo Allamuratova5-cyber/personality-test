@@ -99,6 +99,10 @@ const categories = [
 let currentIndex = 0;
 let answers = new Array(questions.length).fill(null);
 
+const welcomeScreen = document.getElementById("welcomeScreen");
+const startBtn = document.getElementById("startBtn");
+const seeResultsBtn = document.getElementById("seeResultsBtn");
+
 const questionText = document.getElementById("questionText");
 const options = document.getElementById("options");
 const progressText = document.getElementById("progressText");
@@ -110,6 +114,19 @@ const resultsContainer = document.getElementById("resultsContainer");
 const downloadBtn = document.getElementById("downloadBtn");
 const sectionProgress = document.getElementById("sectionProgress");
 const combinedResult = document.getElementById("combinedResult");
+
+function showQuiz() {
+  welcomeScreen.style.display = "none";
+  resultCard.style.display = "none";
+  quizCard.style.display = "block";
+  renderQuestion();
+}
+
+function showOnlyResults() {
+  welcomeScreen.style.display = "none";
+  quizCard.style.display = "none";
+  showResults();
+}
 
 function renderSectionProgress() {
   sectionProgress.innerHTML = "";
@@ -300,6 +317,9 @@ function showResults() {
   `;
 }
 
+startBtn.addEventListener("click", showQuiz);
+seeResultsBtn.addEventListener("click", showOnlyResults);
+
 downloadBtn.onclick = () => {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -328,5 +348,3 @@ downloadBtn.onclick = () => {
 
   doc.save("survey-results.pdf");
 };
-
-renderQuestion();
