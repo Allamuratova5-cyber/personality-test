@@ -331,38 +331,73 @@ function showResults() {
   `;
 }
 
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const scores = calculate();
+
+  doc.setFillColor(255, 245, 250);
+  doc.rect(0, 0, 210, 297, "F");
+
+  doc.setFillColor(236, 72, 153);
+  doc.roundedRect(15, 15, 180, 20, 6, 6, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(20);
+  doc.text("My Path - Survey Results", 105, 28, { align: "center" });
+
+  let y = 48;
+
+  categories.forEach((category) => {
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(18, y, 174, 32, 5, 5, "F");
+
+    doc.setTextColor(92, 63, 77);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text(category, 24, y + 10);
+
+    doc.setTextColor(236, 72, 153);
+    doc.setFontSize(16);
+    doc.text(`${scores[category]}%`, 170, y + 10);
+
+    doc.setTextColor(78, 59, 68);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(11);
+
+    const lines = doc.splitTextToSize(getText(category, scores[category]), 160);
+    doc.text(lines, 24, y + 20);
+
+    y += 40;
+  });
+
+  if (y > 240) {
+    doc.addPage();
+    y = 20;
+  }
+
+  doc.setFillColor(255, 255, 255);
+  doc.roundedRect(18, y, 174, 42, 5, 5, "F");
+  doc.setTextColor(92, 63, 77);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text("Combined Result", 24, y + 10);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.setTextColor(78, 59, 68);
+  const combinedLines = doc.splitTextToSize(getCombinedResultText(scores), 160);
+  doc.text(combinedLines, 24, y + 20);
+
+  doc.save("my-path-results.pdf");
+}
+
 startBtn.addEventListener("click", showQuiz);
 seeResultsBtn.addEventListener("click", showOnlyResults);
 if (backHomeBtn) backHomeBtn.addEventListener("click", goHome);
-
-downloadBtn.onclick = () => {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  const scores = calculate();
-
-  let y = 20;
-  doc.setFontSize(18);
-  doc.text("Survey Results", 20, y);
-
-  y += 12;
-  doc.setFontSize(12);
-
-  categories.forEach((category) => {
-    doc.text(`${category}: ${scores[category]}%`, 20, y);
-    y += 8;
-
-    const text = getText(category, scores[category]);
-    const lines = doc.splitTextToSize(text, 170);
-    doc.text(lines, 20, y);
-    y += lines.length * 7 + 4;
-  });
-
-  const combined = getCombinedResultText(scores);
-  const combinedLines = doc.splitTextToSize(`Combined Result: ${combined}`, 170);
-  doc.text(combinedLines, 20, y);
-
-  doc.save("survey-results.pdf");
-};
+if (downloadBtn) downloadBtn.addEventListener("click", downloadPDF);
 
 window.addEventListener("DOMContentLoaded", () => {
   welcomeScreen.style.display = "flex";
