@@ -60,10 +60,16 @@
   </div>
 
   <div class="card result-card" id="resultCard" style="display: none;">
-    <h2>Your Results</h2>
+    <h2 class="results-title">Your Results</h2>
+    <p class="results-subtitle">Here is how different factors may be shaping your choice of major.</p>
+
     <div id="resultsContainer"></div>
     <div id="combinedResult" class="combined-result"></div>
-    <button id="downloadBtn">Download PDF</button>
+
+    <div class="results-buttons">
+      <button id="downloadBtn">Download PDF</button>
+      <button id="backHomeBtn" class="back-home-btn">Back to Home</button>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
