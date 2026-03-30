@@ -325,10 +325,15 @@ function showResults() {
     resultsContainer.appendChild(div);
   });
 
-  combinedResult.innerHTML = `
-    <strong>Combined Result:</strong><br>
-    ${getCombinedResultText(scores)}
-  `;
+combinedResult.innerHTML = `
+  <div class="combined-box">
+    <h3>Overall Insight</h3>
+    <p>${getCombinedResultText(scores)}</p>
+
+    <h3>Suggestion</h3>
+    <p>${getSuggestion(scores)}</p>
+  </div>
+`;
 }
 
 function downloadPDF() {
