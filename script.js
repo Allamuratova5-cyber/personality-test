@@ -318,11 +318,11 @@ function getSuggestionText(scores) {
   const barrierHigh = social > 60 || perfection > 60 || cultural > 60;
 
   if (stem > 60 && barrierHigh) {
-    return "You may benefit from joining a lab, a science club, or a small research project. Your answers suggest that real interest in STEM exists, but fear or outside pressure may be making the path harder than it should feel.";
+    return "Your answers suggest that real interest in STEM exists, but fear or outside pressure may be making the path harder than it should feel.Try starting with a small and safe step: join a school science club, do a simple experiment at home, or take part in a school project. You can also join beginner-friendly workshops or summer camps where you can explore science without pressure.";
   }
 
   if (stem > 60 && !barrierHigh) {
-    return "You seem ready to grow through more advanced STEM experiences. Try laboratory work, internships, competitions, coding projects, or research opportunities to strengthen your skills and confidence.";
+    return "You seem ready to grow through more advanced STEM experiences. Try laboratory work, competitions, coding projects, or research opportunities to strengthen your skills and confidence. Use Khan Academy to study a hard subject.";
   }
 
   if (nonStem > 60 && stem < 40) {
@@ -330,11 +330,11 @@ function getSuggestionText(scores) {
   }
 
   if (stem < 40 && barrierHigh) {
-    return "It may help to reflect on what you truly enjoy without pressure from others. Try short exploratory projects, career conversations, or mentoring support before deciding that a path is not for you.";
+    return "You may feel more interested in non-STEM subjects. Try activities like writing, creating presentations, teaching younger students, or joining school clubs (debate, language, art). You can also take part in creative competitions or short programs to explore your strengths.";
   }
 
   if (stem > 60 && nonStem > 60) {
-    return "You show potential in both analytical and creative directions. Interdisciplinary paths such as education technology, psychology, architecture, science communication, design, or research-based teaching may suit you well.";
+    return "You have interests in both STEM and non-STEM areas. You can try combining them through projects like creating a website, making educational content, or presenting scientific topics in a creative way. Also look for summer schools that allow you to explore different subjects together.";
   }
 
   return "Keep exploring different subjects, practical experiences, and small personal projects. Real interest often becomes clearer through action, not only through expectations or grades.";
