@@ -140,6 +140,8 @@ function goHome() {
   welcomeScreen.style.display = "flex";
   quizCard.style.display = "none";
   resultCard.style.display = "none";
+  resultsContainer.innerHTML = "";
+  combinedResult.innerHTML = "";
 }
 
 function renderSectionProgress() {
@@ -199,11 +201,11 @@ function renderQuestion() {
       btn.classList.add("selected");
     }
 
-    btn.onclick = () => {
+    btn.addEventListener("click", () => {
       answers[currentIndex] = item.value;
       currentIndex++;
       renderQuestion();
-    };
+    });
 
     buttonRow.appendChild(btn);
   });
@@ -307,6 +309,37 @@ function getCombinedResultText(scores) {
   return "Your answers show a mixed pattern of interests and influences. It may help to explore both your personal interests and the barriers that shape your choices.";
 }
 
+function getSuggestionText(scores) {
+  const stem = scores["STEM Interest"];
+  const nonStem = scores["Non-STEM Interest"];
+  const social = scores["Social Influence"];
+  const perfection = scores["Perfectionist Trap"];
+  const cultural = scores["Cultural / Social Barrier"];
+  const barrierHigh = social > 60 || perfection > 60 || cultural > 60;
+
+  if (stem > 60 && barrierHigh) {
+    return "You may benefit from joining a lab, a science club, or a small research project. Your answers suggest that real interest in STEM exists, but fear or outside pressure may be making the path harder than it should feel.";
+  }
+
+  if (stem > 60 && !barrierHigh) {
+    return "You seem ready to grow through more advanced STEM experiences. Try laboratory work, internships, competitions, coding projects, or research opportunities to strengthen your skills and confidence.";
+  }
+
+  if (nonStem > 60 && stem < 40) {
+    return "Your answers suggest that you may feel more comfortable and motivated in non-STEM fields. Consider projects in writing, communication, education, design, languages, or social sciences where your interests can develop naturally.";
+  }
+
+  if (stem < 40 && barrierHigh) {
+    return "It may help to reflect on what you truly enjoy without pressure from others. Try short exploratory projects, career conversations, or mentoring support before deciding that a path is not for you.";
+  }
+
+  if (stem > 60 && nonStem > 60) {
+    return "You show potential in both analytical and creative directions. Interdisciplinary paths such as education technology, psychology, architecture, science communication, design, or research-based teaching may suit you well.";
+  }
+
+  return "Keep exploring different subjects, practical experiences, and small personal projects. Real interest often becomes clearer through action, not only through expectations or grades.";
+}
+
 function showResults() {
   quizCard.style.display = "none";
   resultCard.style.display = "block";
@@ -325,21 +358,20 @@ function showResults() {
     resultsContainer.appendChild(div);
   });
 
-combinedResult.innerHTML = `
-  <div class="combined-box">
-    <h3>Overall Insight</h3>
-    <p>${getCombinedResultText(scores)}</p>
+  combinedResult.innerHTML = `
+    <div class="combined-box">
+      <h3>Combined Result</h3>
+      <p>${getCombinedResultText(scores)}</p>
 
-    <h3>Suggestion</h3>
-    <p>${getSuggestion(scores)}</p>
-  </div>
-`;
+      <h3>Suggestion</h3>
+      <p>${getSuggestionText(scores)}</p>
+    </div>
+  `;
 }
 
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
-
   const scores = calculate();
 
   doc.setFillColor(255, 245, 250);
@@ -356,6 +388,13 @@ function downloadPDF() {
   let y = 48;
 
   categories.forEach((category) => {
+    if (y > 240) {
+      doc.addPage();
+      doc.setFillColor(255, 245, 250);
+      doc.rect(0, 0, 210, 297, "F");
+      y = 20;
+    }
+
     doc.setFillColor(255, 255, 255);
     doc.roundedRect(18, y, 174, 32, 5, 5, "F");
 
@@ -378,13 +417,15 @@ function downloadPDF() {
     y += 40;
   });
 
-  if (y > 240) {
+  if (y > 220) {
     doc.addPage();
+    doc.setFillColor(255, 245, 250);
+    doc.rect(0, 0, 210, 297, "F");
     y = 20;
   }
 
   doc.setFillColor(255, 255, 255);
-  doc.roundedRect(18, y, 174, 42, 5, 5, "F");
+  doc.roundedRect(18, y, 174, 30, 5, 5, "F");
   doc.setTextColor(92, 63, 77);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(14);
@@ -394,54 +435,40 @@ function downloadPDF() {
   doc.setFontSize(11);
   doc.setTextColor(78, 59, 68);
   const combinedLines = doc.splitTextToSize(getCombinedResultText(scores), 160);
-  function getSuggestion(scores) {
-  const stem = scores["STEM Interest"];
-  const nonStem = scores["Non-STEM Interest"];
-  const social = scores["Social Influence"];
-  const perfection = scores["Perfectionist Trap"];
-  const cultural = scores["Cultural / Social Barrier"];
-
-  const barrierHigh = social > 60 || perfection > 60 || cultural > 60;
-
-  // 🔹 CASE 1
-  if (stem > 60 && barrierHigh) {
-    return "You seem to have strong interest in STEM, but external pressure or self-doubt may be holding you back. Try exploring STEM through small projects, courses, or mentors who support your growth.";
-  }
-
-  // 🔹 CASE 2
-  if (stem > 60 && !barrierHigh) {
-    return "You have a clear and independent interest in STEM. Consider exploring internships, research opportunities, or advanced courses to grow in this direction.";
-  }
-
-  // 🔹 CASE 3
-  if (nonStem > 60 && stem < 40) {
-    return "Your answers show a strong natural interest in non-STEM fields. You may thrive in areas like communication, arts, or social sciences — explore careers that align with your creativity and expression.";
-  }
-
-  // 🔹 CASE 4
-  if (stem < 40 && barrierHigh) {
-    return "Your current choices may be influenced by pressure or fear rather than true interest. It might help to reflect on what you genuinely enjoy without external expectations.";
-  }
-
-  // 🔹 CASE 5
-  if (stem > 60 && nonStem > 60) {
-    return "You show strong interest in both STEM and non-STEM areas. You may benefit from interdisciplinary fields where both analytical and creative skills are valued.";
-  }
-
-  return "Try exploring different subjects and experiences to better understand what truly interests you and what influences your choices.";
-}
   doc.text(combinedLines, 24, y + 20);
+
+  y += 40;
+
+  if (y > 220) {
+    doc.addPage();
+    doc.setFillColor(255, 245, 250);
+    doc.rect(0, 0, 210, 297, "F");
+    y = 20;
+  }
+
+  doc.setFillColor(255, 255, 255);
+  doc.roundedRect(18, y, 174, 40, 5, 5, "F");
+  doc.setTextColor(92, 63, 77);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.text("Suggestion", 24, y + 10);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(11);
+  doc.setTextColor(78, 59, 68);
+  const suggestionLines = doc.splitTextToSize(getSuggestionText(scores), 160);
+  doc.text(suggestionLines, 24, y + 20);
 
   doc.save("my-path-results.pdf");
 }
 
-startBtn.addEventListener("click", showQuiz);
-seeResultsBtn.addEventListener("click", showOnlyResults);
+if (startBtn) startBtn.addEventListener("click", showQuiz);
+if (seeResultsBtn) seeResultsBtn.addEventListener("click", showOnlyResults);
 if (backHomeBtn) backHomeBtn.addEventListener("click", goHome);
 if (downloadBtn) downloadBtn.addEventListener("click", downloadPDF);
 
 window.addEventListener("DOMContentLoaded", () => {
-  welcomeScreen.style.display = "flex";
-  quizCard.style.display = "none";
-  resultCard.style.display = "none";
+  if (welcomeScreen) welcomeScreen.style.display = "flex";
+  if (quizCard) quizCard.style.display = "none";
+  if (resultCard) resultCard.style.display = "none";
 });
